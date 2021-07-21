@@ -38,6 +38,8 @@ export class GeoClass {
 		this._pluggables = [];
 		logger.debug('Geo Options', this._config);
 
+		this.getAvailableMaps.bind(this);
+		this.getDefaultMap.bind(this);
 	}
 
 	public getModuleName() {
@@ -107,6 +109,32 @@ export class GeoClass {
 			this.addPluggable(locationServicesProvider);
 		}
 		return this._config;
+	}
+
+	public getAvailableMaps(provider = DEFAULT_PROVIDER) {
+		const prov = this._pluggables.find(
+			pluggable => pluggable.getProviderName() === provider
+		);
+
+		if (prov === undefined) {
+			logger.debug('No plugin found with providerName', provider);
+			return 'No plugin found in Geo for the provider';
+		}
+
+		return prov.getAvailableMaps();
+	}
+
+	public getDefaultMap(provider = DEFAULT_PROVIDER) {
+		const prov = this._pluggables.find(
+			pluggable => pluggable.getProviderName() === provider
+		);
+
+		if (prov === undefined) {
+			logger.debug('No plugin found with providerName', provider);
+			return 'No plugin found in Geo for the provider';
+		}
+
+		return prov.getDefaultMap();
 	}
 }
 
