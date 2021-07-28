@@ -174,6 +174,18 @@ export class GeoClass {
 			throw error;
 		}
 	}
+
+	public async search(input, options) {
+		const { providerName = DEFAULT_PROVIDER } = options || {};
+		const prov = this.getPluggable(providerName);
+
+		try {
+			return await prov.search(input, options);
+		} catch (error) {
+			logger.debug(error);
+			throw error;
+		}
+	}
 }
 
 export const Geo = new GeoClass();

@@ -41,4 +41,9 @@ export interface GeoProvider {
 		coordinates: Coordinates,
 		options?: SearchByCoordinatesOptions
 	): Promise<Place>;
+
+	search(
+		input: string,
+		options?: SearchByTextOptions | SearchByCoordinatesOptions
+	): Promise<Place | Place[]>;
 }

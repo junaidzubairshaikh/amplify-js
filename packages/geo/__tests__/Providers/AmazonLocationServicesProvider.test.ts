@@ -330,4 +330,48 @@ describe('AmazonLocationServicesProvider', () => {
 			).rejects.toThrow('No credentials');
 		});
 	});
+
+	describe.only('search', () => {
+		const testText = 'starbucks';
+		const testCoordinates = '    12, 79    ';
+
+		test('should call searchByText for text input', async () => {
+			jest.spyOn(Credentials, 'get').mockImplementationOnce(() => {
+				return Promise.resolve(credentials);
+			});
+
+			const locationProvider = new AmazonLocationServicesProvider();
+			locationProvider.configure(awsConfig.geo.amazon_location_services);
+
+			const textResults = await locationProvider.search(testText);
+			expect(textResults).toEqual([testPlaceCamelCase]);
+
+			const spyon = jest.spyOn(LocationClient.prototype, 'send');
+			const textInput = spyon.mock.calls[0][0].input;
+			expect(textInput).toEqual({
+				Text: testText,
+				IndexName: awsConfig.geo.amazon_location_services.place_indexes.default,
+			});
+		});
+
+		test('should call searchByCoordinates for coordinate string input', async () => {
+			jest.spyOn(Credentials, 'get').mockImplementationOnce(() => {
+				return Promise.resolve(credentials);
+			});
+
+			const locationProvider = new AmazonLocationServicesProvider();
+			locationProvider.configure(awsConfig.geo.amazon_location_services);
+
+			const coordsResults = await locationProvider.search(testCoordinates);
+			expect(coordsResults).toEqual(testPlaceCamelCase);
+
+			const spyon = jest.spyOn(LocationClient.prototype, 'send');
+			const coordsInput = spyon.mock.calls[0][0].input;
+			expect(coordsInput).toEqual({
+				Position: [12, 79],
+				MaxResults: undefined,
+				IndexName: awsConfig.geo.amazon_location_services.place_indexes.default,
+			});
+		});
+	});
 });

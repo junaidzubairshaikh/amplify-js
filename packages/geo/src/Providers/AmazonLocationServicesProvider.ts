@@ -249,6 +249,45 @@ export class AmazonLocationServicesProvider implements GeoProvider {
 		return results;
 	}
 
+	public async search(
+		input: string,
+		options?: SearchByTextOptions | SearchByCoordinatesOptions
+	) {
+		const isCoords = this._isCoordinates(input);
+		if (this._isCoordinates(input)) {
+			const coordinates = this._convertStringToLatLong(input);
+			let reverseGeocodeOptions: SearchByCoordinatesOptions = {};
+			if (options?.maxResults) {
+				reverseGeocodeOptions.maxResults = options.maxResults;
+			}
+			if (options?.placeIndexName) {
+				reverseGeocodeOptions.placeIndexName = options.placeIndexName;
+			}
+
+			return await this.searchByCoordinates(coordinates, reverseGeocodeOptions);
+		} else {
+			return await this.searchByText(input, options);
+		}
+	}
+
+	private _isCoordinates(input: string): boolean {
+		const reverseGeocodeCoordRgx = /^[ ]*(-?\d+\.?\d*)[, ]+(-?\d+\.?\d*)[ ]*$/;
+		return reverseGeocodeCoordRgx.test(input) ? true : false;
+	}
+
+	private _convertStringToLatLong(string: string): Coordinates | null {
+		const tuple = string.split(',');
+		const lat = parseFloat(tuple[0]);
+		const long = parseFloat(tuple[1]);
+		if (lat >= -90 && lat <= 90 && long >= -180 && long <= 180) {
+			return [lat, long];
+		} else if (long >= -90 && long <= 90 && lat >= -180 && lat <= 180) {
+			return [long, lat];
+		} else {
+			throw new Error('not valid coordinates');
+		}
+	}
+
 	/**
 	 * @private
 	 */
