@@ -21,7 +21,12 @@ import {
 	INTERNAL_AWS_APPSYNC_REALTIME_PUBSUB_PROVIDER,
 } from '@aws-amplify/core';
 import { PubSubProvider, PubSubOptions, ProvidertOptions } from './types';
-import { AWSAppSyncProvider, AWSAppSyncRealTimeProvider } from './Providers';
+import {
+	AWSAppSyncProvider,
+	AWSAppSyncRealTimeProvider,
+	AWSIoTProvider,
+} from './Providers';
+// import {AWSIoTProvider} from './l'
 
 const { isNode } = browserOrNode();
 const logger = new Logger('PubSub');
@@ -137,6 +142,14 @@ export class PubSubClass {
 		return [provider];
 	}
 
+	public restartAWSIoTProvider(amazonRegion, pubsubPoint) {
+		this.log('Restarting AWSIoTProvider...');
+		this._pluggables[0] = new AWSIoTProvider({
+			aws_pubsub_region: amazonRegion,
+			aws_pubsub_endpoint: pubsubPoint,
+		});
+	}
+
 	async publish(
 		topics: string[] | string,
 		msg: any,
@@ -181,6 +194,10 @@ export class PubSubClass {
 			return () =>
 				subscriptions.forEach(subscription => subscription.unsubscribe());
 		});
+	}
+
+	private log(message: string, data?: any) {
+		console.log('CustomPubSub: ' + message, data);
 	}
 }
 

@@ -41,6 +41,8 @@ export abstract class AbstractPubSubProvider implements PubSubProvider {
 		return { ...this._config };
 	}
 
+	public abstract restartAWSIoTProvider(awsRegion, awsPubSubPoint);
+
 	public abstract newClient(clientOptions: ProvidertOptions): Promise<any>;
 
 	public abstract publish(

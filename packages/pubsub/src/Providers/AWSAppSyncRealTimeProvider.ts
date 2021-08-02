@@ -162,6 +162,10 @@ export class AWSAppSyncRealTimeProvider extends AbstractPubSubProvider {
 		throw new Error('Operation not supported');
 	}
 
+	public restartAWSIoTProvider(awsRegion: any, awsPubSubPoint: any) {
+		throw new Error('Method not implemented.');
+	}
+
 	subscribe(
 		_topics: string[] | string,
 		options?: ProvidertOptions

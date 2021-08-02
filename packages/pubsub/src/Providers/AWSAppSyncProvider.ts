@@ -31,6 +31,10 @@ export class AWSAppSyncProvider extends MqttOverWSProvider {
 		throw new Error('Operation not supported');
 	}
 
+	public restartAWSIoTProvider(awsRegion: any, awsPubSubPoint: any) {
+		throw new Error('Method not implemented.');
+	}
+
 	private _cleanUp(clientId: string) {
 		const topicsForClient = Array.from(this._topicClient.entries())
 			.filter(([, c]) => c.clientId === clientId)

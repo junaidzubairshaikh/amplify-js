@@ -23,6 +23,8 @@ export interface PubSubProvider {
 	// return the name of you provider
 	getProviderName(): string;
 
+	restartAWSIoTProvider(awsRegion: string, awsPubSubPoint: string);
+
 	publish(
 		topics: string[] | string,
 		msg: any,

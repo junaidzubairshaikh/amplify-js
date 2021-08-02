@@ -98,6 +98,10 @@ export class MqttOverWSProvider extends AbstractPubSubProvider {
 		return 'MqttOverWSProvider';
 	}
 
+	public restartAWSIoTProvider(awsRegion: any, awsPubSubPoint: any) {
+		throw new Error('Method not implemented.');
+	}
+
 	public onDisconnect({ clientId, errorCode, ...args }) {
 		if (errorCode !== 0) {
 			logger.warn(clientId, JSON.stringify({ errorCode, ...args }, null, 2));
